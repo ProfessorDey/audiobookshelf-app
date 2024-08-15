@@ -45,6 +45,12 @@ class LocalLibraryItem(
   @get:JsonIgnore
   val authorName get() = media.metadata.getAuthorDisplayName()
   @get:JsonIgnore
+  val seriesName get() = media.metadata.getSeriesDisplayName()
+  @get:JsonIgnore
+  val publisherName get() = media.metadata.getPublisherDisplayName()
+  @get:JsonIgnore
+  val narratorName get() = media.metadata.getNarratorDisplayName()
+  @get:JsonIgnore
   val isPodcast get() = mediaType == "podcast"
 
   @JsonIgnore

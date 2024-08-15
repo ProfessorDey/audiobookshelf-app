@@ -139,10 +139,22 @@ class AbsDownloader : Plugin() {
     if (libraryItem.mediaType == "book") {
       val bookTitle = cleanStringForFileSystem(libraryItem.media.metadata.title)
       val bookAuthor = cleanStringForFileSystem(libraryItem.media.metadata.getAuthorDisplayName())
+      val bookSeries = cleanStringForFileSystem(libraryItem.media.metadata.getSeriesDisplayName())
+      val bookPublisher = cleanStringForFileSystem(libraryItem.media.metadata.getPublisherDisplayName())
+      val bookNarrator = cleanStringForFileSystem(libraryItem.media.metadata.getNarratorDisplayName())
+      
+      // Use the Subfolder Path setting to construct the actual subfolder path from object variables
+      var subfolderPath = DeviceManager.deviceData.deviceSettings?.subfolderPath ?: "[author]/[title]"
+      subfolderPath = subfolderPath.ifBlank {"[author]/[title]"}
+      val pathMap = mapOf("author" to bookAuthor, "series" to bookSeries, "publisher" to bookPublisher, "narrator" to bookNarrator, "title" to bookTitle)
+      pathMap.forEach { map ->
+        subfolderPath.replace("[" + map.key +"]", map.value)
+      }
+      val itemSubfolder = subfolderPath
+      // Original: val itemSubfolder = "$bookAuthor/$bookTitle"
 
       val tracks = libraryItem.media.getAudioTracks()
       Log.d(tag, "Starting library item download with ${tracks.size} tracks")
-      val itemSubfolder = "$bookAuthor/$bookTitle"
       val itemFolderPath = if (isInternal) "$tempFolderPath" else "${localFolder.absolutePath}/$itemSubfolder"
       val downloadItem = DownloadItem(libraryItem.id, libraryItem.id, null, libraryItem.userMediaProgress,DeviceManager.serverConnectionConfig?.id ?: "", DeviceManager.serverAddress, DeviceManager.serverUserId, libraryItem.mediaType, itemFolderPath, localFolder, bookTitle, itemSubfolder, libraryItem.media, mutableListOf())
 

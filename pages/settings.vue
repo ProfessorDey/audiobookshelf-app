@@ -68,6 +68,16 @@
       <p class="pl-4">{{ $strings.LabelAllowSeekingOnMediaControls }}</p>
     </div>
 
+    <!-- Download settings -->
+    <template v-if="!isiOS">
+      <p class="uppercase text-xs font-semibold text-fg-muted mb-2 mt-10">{{ $strings.HeaderDownloadSettings }}</p>
+      <div class="flex items-center py-3">
+        <p class="pr-4 w-36">{{ $strings.LabelDownloadSubfolderPath }}</p>
+        <ui-text-input v-model="settings.downloadSubfolderPath" @input="saveSettings" style="width: 145px; max-width: 145px"/>
+        <span class="material-icons-outlined ml-2" @click.stop="showInfo('downloadSubfolderPath')">info</span>
+      </div>
+    </template>
+
     <!-- Sleep timer settings -->
     <template v-if="!isiOS">
       <p class="uppercase text-xs font-semibold text-fg-muted mb-2 mt-10">{{ $strings.HeaderSleepTimerSettings }}</p>
@@ -183,6 +193,7 @@ export default {
         shakeSensitivity: 'MEDIUM',
         lockOrientation: 0,
         hapticFeedback: 'LIGHT',
+        downloadSubfolderPath: '[author]/[title]'
         autoSleepTimer: false,
         autoSleepTimerStartTime: '22:00',
         autoSleepTimerEndTime: '06:00',
@@ -198,6 +209,10 @@ export default {
       theme: 'dark',
       lockCurrentOrientation: false,
       settingInfo: {
+        downloadSubfolderPath: {
+          name: this.$strings.LabelDownloadSubfolderPath,
+          message: this.$strings.LabelDownloadSubfolderPathHelp
+        },
         disableShakeToResetSleepTimer: {
           name: this.$strings.LabelDisableShakeToReset,
           message: this.$strings.LabelDisableShakeToResetHelp
@@ -559,6 +574,8 @@ export default {
       this.settings.lockOrientation = deviceSettings.lockOrientation || 'NONE'
       this.lockCurrentOrientation = this.settings.lockOrientation !== 'NONE'
       this.settings.hapticFeedback = deviceSettings.hapticFeedback || 'LIGHT'
+
+      this.settings.downloadSubfolderPath = deviceSettings.downloadSubfolderPath || '[author]/[title]'
 
       this.settings.disableShakeToResetSleepTimer = !!deviceSettings.disableShakeToResetSleepTimer
       this.settings.shakeSensitivity = deviceSettings.shakeSensitivity || 'MEDIUM'

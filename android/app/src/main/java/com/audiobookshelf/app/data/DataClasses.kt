@@ -192,7 +192,10 @@ class Book(
 )
 open class MediaTypeMetadata(var title:String, var explicit:Boolean) {
   @JsonIgnore
-  open fun getAuthorDisplayName():String { return "Unknown" }
+  open fun getAuthorDisplayName():String { return "Unknown Author" }
+  open fun getSeriesDisplayName():String { return "Unknown Series" }
+  open fun getPublisherDisplayName():String { return "Unknown Publisher" }
+  open fun getNarratorDisplayName():String { return "Unknown Narrator" }
 }
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -217,7 +220,10 @@ class BookMetadata(
   var seriesName:String?
 ) : MediaTypeMetadata(title, explicit) {
   @JsonIgnore
-  override fun getAuthorDisplayName():String { return authorName ?: "Unknown" }
+  override fun getAuthorDisplayName():String { return authorName ?: "Unknown Author" }
+  override fun getSeriesDisplayName():String { return seriesName ?: "Unknown Series" }
+  override fun getPublisherDisplayName():String { return publisher ?: "Unknown Publisher" }
+  override fun getNarratorDisplayName():String { return narratorName ?: "Unknown Narrator" }
 }
 
 @JsonIgnoreProperties(ignoreUnknown = true)
